@@ -1,24 +1,139 @@
 #!/usr/bin/env perl
 use Mojolicious::Lite;
+use Store::CouchDB;
+use Data::Dumper;
 
-# Documentation browser under "/perldoc"
-plugin 'PODRenderer';
+my $config = plugin Config => {
+    file      => 'etc/githublicious.conf',
+    stash_key => 'conf'
+};
+my $couch = Store::CouchDB->new(
+    port  => $config->{couch_port},
+    db    => $config->{couch_db},
+    debug => 1,
+);
 
-get '/welcome' => sub {
+plugin 'CouchAuth', {
+    db   => $config->{couch_db},
+    port => $config->{couch_port},
+    };
+plugin 'FormValidate';
+#plugin 'Mail', $config->{mail};
+
+
+get '/' => sub {
   my $self = shift;
   $self->render('index');
 };
 
+get '/login' => sub {
+    my ($self) = @_;
+    $self->redirect_to('dashboard') if $self->auth();
+};
+
+get '/signup/:type' => sub {
+    my $self = shift;
+    $self->stash(template => 'signup_' . $self->param('type'));
+};
+
+get '/logout' => sub {
+    my $self = shift;
+    $self->session(expires => 1);
+    $self->redirect_to('/');
+};
+
+post '/signup' => sub {
+    my $self = shift;
+
+    my $page = $self->process_form() || return;
+
+    if ($self->check_free('user', $self->param('username'))) {
+        $self->flash(message =>
+                'This username is already taken. Maybe you have a user already?'
+        );
+        $self->redirect_to('/login');
+        return;
+    }
+    $page->{type}   = $self->param('type');
+    $page->{active} = 'true';
+    $couch->put_doc({ doc => $page });
+
+    $self->redirect_to('/dashboard');
+};
+
+# password reset stuff
+get '/reset_password';
+
+get '/reset_password/:id' => sub {
+    my $self = shift;
+
+    my $reset = $self->get_password_reset($self->param('id'));
+    if ($reset) {
+        $self->stash(reset_request => $reset);
+    }
+    else {
+        $self->flash(
+            error => "We could not find your password reset
+            request. Maybe it expired or it was used already."
+        );
+        $self->redirect_to('/');
+    }
+} => 'update_password';
+
+post '/reset_password' => sub {
+    my $self = shift;
+
+    if (my $reply = $self->add_password_reset()) {
+        $self->stash(mail => $reply->{user}->{username});
+        $self->mail(
+            to      => $reply->{user}->{username},
+            subject => 'Password reset request for: '
+                . $reply->{user}->{username},
+            data => "Hi,\n\nWe received a password reset request for your
+get-it-fixed.com user account. If you want to reset your password now please
+click on the following link:\n\n http://get-it-fixed.com/reset_password/"
+                . $reply->{id} . "\n\nCheers!\nYour 'get it fixed' team.\n",
+        );
+        $self->flash(message => "Your reset password request was sent to: "
+                . $reply->{user}->{username});
+        $self->redirect_to('/');
+    }
+    else {
+        $self->flash(
+            error => 'We could not find your account with the username: '
+                . $self->param('username'));
+        $self->redirect_to('/reset_password');
+    }
+};
+
+post '/reset_password/:id' => sub {
+    my $self = shift;
+
+    $self->update_password();
+    $self->expire_password_reset($self->param('id'));
+    $self->flash(message => 'Your password was updated successfully');
+    $self->redirect_to('/login');
+};
+
+## private stuff below here
+under sub {
+    my $self = shift;
+
+    # Authenticated
+    return 1 if $self->auth();
+
+    # Not authenticated
+    $self->flash(error => "Wrong username or password!");
+    $self->redirect_to('login');
+    return;
+};
+
+any '/dashboard' => sub {
+    my $self = shift;
+
+} => 'dashboard';
+
+
+
+
 app->start;
-__DATA__
-
-@@ index.html.ep
-% layout 'default';
-% title 'Welcome';
-Welcome to Mojolicious!
-
-@@ layouts/default.html.ep
-<!doctype html><html>
-  <head><title><%= title %></title></head>
-  <body><%= content %></body>
-</html>

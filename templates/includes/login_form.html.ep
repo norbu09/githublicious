@@ -1,0 +1,8 @@
+<form name="login" class="navbar-login pull-right" action="/dashboard" method="post">
+    <input type="hidden" name="formfields" value="username,password">
+    <input type="hidden" name="mandatoryfields" value="username,password">
+
+	<input name="username" type="text" class="input-small" placeholder="Email" />
+	<input password="password" type="password" class="input-small" placeholder="Password" />
+  	<button type="submit" class="btn btn-primary btn-mini">Sign in</button>
+</form>

@@ -1,0 +1,169 @@
+/* Tweak navbar brand link to be super sleek
+-------------------------------------------------- */
+
+.navbar .brand {
+  padding-right: 0;
+  padding-left: 0;
+  margin-left: 20px;
+  float: right;
+  font-weight: bold;
+  color: #000;
+  text-shadow: 0 1px 0 rgba(255,255,255,.1), 0 0 30px rgba(255,255,255,.125);
+  -webkit-transition: all .2s linear;
+     -moz-transition: all .2s linear;
+          transition: all .2s linear;
+   color: #bffc3d;
+}
+.navbar .brand:hover {
+  text-decoration: none;
+}
+
+.person {
+	position: relative;
+}
+
+a.signup {
+	display: inline-block;
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+	
+	font-size: 15pt;
+}
+
+/* http://paulirish.com/2012/box-sizing-border-box-ftw/ */
+.person { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+
+div.row.front {
+	/* A hack that needs to be resolve to fix layout related issues */
+	padding-left: 20px;
+}
+
+.brand {
+	padding-top: 6px !important;
+	padding-bottom: 1px !important;
+}
+
+div.front {
+	text-align: center;	
+}
+
+div.front div.reasons {
+	margin-top: 20px;
+}
+
+div.front img.logo {
+	margin: 20px;
+}
+
+div.front .tagline {
+  	text-align: center;
+	margin-top: 0.5em;
+}
+
+.person, .generic-person {
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-khtml-border-radius: 6px;
+	border-radius: 6px;
+
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 60px;
+	
+	margin-top: 50px;
+}
+
+.sales-box {
+	background-image: url(/images/bg2-light.png);
+	box-shadow: 3px 3px 6px #ccc;
+	
+	text-align: center;
+	height: 256px;
+}
+
+.person h3 {
+  	text-align: center;
+}
+
+.person .icon {
+	position: absolute;
+	top: -50px;
+	left: 80px;
+	
+	z-index: 20;
+}
+
+.person img.pricing {
+	position: absolute;
+	right: 0;
+	top: 0;
+	
+	z-index: 10;
+	padding: 0;
+	margin: 0;
+}
+
+.generic-person {
+	padding-top: 0;
+	margin-top: 0;
+	border: 8px solid #ccc;
+}
+
+.tenant {
+	border: 8px solid #6290CC;
+}
+
+.manager {
+	border: 8px solid #62CC69;
+}
+
+.toolguy {
+	border: 8px solid #CC628C;
+}
+
+ul.features {
+	list-style: none;
+	margin: 0;
+}
+
+ul.features li {
+	background-image: url("/images/plus.png");
+	padding-left: 28px;
+	padding-right: 28px;
+	
+	background-repeat: no-repeat;
+	margin-bottom: 0.5em;
+	line-height: 28px;
+}
+
+.navbar-login {
+	color: white;
+	padding: 0;
+	margin: 6px 0px 0px 0px;
+}
+
+.navbar-login label {
+	color: white !important;
+	display: inline-block;
+}
+
+.navbar-login button, .navbar-login label {
+	margin-top: 0px !important;
+	display: inline-block;
+}
+
+.navbar-login input {
+	margin-bottom: 0px !important;
+	height: 10pt;
+}
+
+.form-actions {
+	padding-top: 5pt !important;
+	height: 14pt !important;
+}
+
+.row p {
+	padding-top: 1em;
+	padding-bottom: 2em;
+}

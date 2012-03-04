@@ -1,4 +1,13 @@
 % layout 'default';
-% title 'Welcome';
-Welcome to Mojolicious!
+% title 'githublicious';
 
+<div class="hero-unit">
+    <p>
+    <h1>githublicious</h1>
+    </p>
+    <p>
+    Your <strong>github</strong> post commit hook tracker.<br> The easiest way to add post
+    commit hooks to github,<br><strong>ever!</strong>
+    </p>
+    <p><a href="/login" class="btn btn-primary btn-large">Login &raquo;</a></p>
+</div>

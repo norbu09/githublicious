@@ -1,4 +1,102 @@
-<!doctype html><html>
-  <head><title><%= title %></title></head>
-  <body><%= content %></body>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>githublicious</title>
+    <meta name="description" content="">
+    <meta name="author" content="githublicious">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css" />
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/apple-touch-icon-114x114.png">
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <% if (session->{name}) { %>
+          <a class="brand" href="/dashboard">githublicious</a>
+          <% } else { %>
+          <a class="brand" href="/">githublicious</a>
+          <% } %>
+          <ul class="nav">
+              <% if (session->{name}) { %>
+              <li><a href="/new">new Project</a></li>
+              <% } %>
+          </ul>
+          <ul class="nav">
+              <% if (session->{name}) { %>
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle"><%= session->{name} %> <b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="/user/<%= session->{name} %>">edit profile</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+              <% } else { %>
+				%= include "includes/login_form";
+              <% } %>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+        <section id="notify">
+        <% if (my $message = flash 'error' ) { %> 
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert">×</a>
+            <h4 class="alert-heading">Darn!</h4> <%= $message %>
+        </div>
+        <% } %>
+        <% if (my $message = flash 'message' ) { %> 
+        <div class="alert alert-info">
+            <a class="close" data-dismiss="alert">×</a>
+            <h4 class="alert-heading">Just letting you know!</h4> <%= $message %>
+        </div>
+        <% } %>
+        </section>
+
+        <section id="content">
+        <%= content %>
+        </section>
+
+        <hr>
+
+        <footer>
+          <p>&copy; springtimesoft 2012</p>
+        </footer>
+
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="/js/bootstrap.js"></script>
+    <script src="/js/jquery.prettydate.js"></script>
+    <script type="text/javascript">
+        $(function() { $("a").prettyDate(); });
+    </script>
+  </body>
 </html>
+

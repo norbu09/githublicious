@@ -1,0 +1,44 @@
+% layout 'default';
+% title 'Login';
+
+<div class="container">
+	<div class="row">
+		<div class="span6 offset3 column">
+			<div id="login">
+				<form name="login" id="login" class="form-horizontal" action="/dashboard" method="post">
+					<input type="hidden" name="formfields" value="username,password">
+					<input type="hidden" name="mandatoryfields" value="username,password">
+					<fieldset>
+						<legend>Already a user?</legend>
+						
+						<div class="control-group">
+							<label class="control-label" for="username">Username</label>
+							<div class="controls">
+								<input class="large" name="username" type="text" />
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label class="control-label" for="password">Passphrase</label>
+							<div class="controls">
+								<input class="large" name="password" type="password" />
+							</div>
+						</div>
+						
+						<div class="form-actions">
+							<input type="submit" class="btn btn-primary" value="Login" />
+						</div>
+					</fieldset>
+				</form>
+
+				<p style="text-align: right">Forgot your password? <a href="/reset_password">Reset password</a>.</p>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row front">
+		<div class="reasons">
+	  		%= include "includes/reasons";
+		</div>
+	</div>
+</div>
