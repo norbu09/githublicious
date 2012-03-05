@@ -23,7 +23,8 @@ sub register {
             my $url = $config->{ $doc->{repository}->{name} }->{jenkins};
             return unless $url;
             my $ua = Mojo::UserAgent->new;
-            return $ua->get($url);
+            $doc->{deploy} = $ua->get($url)->res->body;
+            $couch->put_doc({doc => $doc});
         },
     );
 }
