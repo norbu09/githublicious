@@ -24,6 +24,7 @@ sub register {
             return unless $url;
             my $ua = Mojo::UserAgent->new;
             $doc->{deploy} = $ua->get($url)->res->body;
+            $doc->{deploy_time} = time;
             $couch->put_doc({doc => $doc});
         },
     );
