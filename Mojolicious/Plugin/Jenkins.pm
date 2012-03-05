@@ -31,7 +31,7 @@ sub register {
             my $ua = Mojo::UserAgent->new;
             $doc->{deploy} = $ua->get($url)->res->body;
             $doc->{deploy_time} = time;
-            $couch->put_doc({doc => $doc});
+            $couch->put_doc({name => $doc->{_id}, doc => $doc});
             return;
         },
     );
