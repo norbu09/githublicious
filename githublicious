@@ -14,13 +14,9 @@ my $couch = Store::CouchDB->new(
     debug => 1,
 );
 
-plugin 'CouchAuth',
-  {
-    db   => $config->{couch_db},
-    port => $config->{couch_port},
-  };
+plugin 'CouchAuth', $config;
 plugin 'FormValidate';
-plugin 'Jenkins';
+plugin 'Jenkins', $config;
 
 #plugin 'Mail', $config->{mail};
 
@@ -125,7 +121,7 @@ post '/add' => sub {
     my $doc  = $json->decode( $self->param('payload') );
     $doc->{type} = 'commit';
     $couch->put_doc( { doc => $doc } );
-    $self->process_commit( $couch, $doc );
+    $self->process_commit( $doc );
     $self->render_json('ok');
 };
 

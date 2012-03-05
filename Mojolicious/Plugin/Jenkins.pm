@@ -1,15 +1,20 @@
 package Mojolicious::Plugin::Jenkins;
 use Mojo::Base 'Mojolicious::Plugin';
 use Mojo::UserAgent;
+use Store::CouchDB;
 
 sub register {
     my ( $plugin, $app, $conf ) = @_;
 
     # default values
+    my $couch = Store::CouchDB->new(
+        port  => $conf->{couch_port},
+        db    => $conf->{couch_db},
+    );
 
     $app->helper(
         process_commit => sub {
-            my ( $couch, $doc ) = @_;
+            my ( $doc ) = @_;
             my $config = $couch->get_view(
                 {
                     view => 'repository/config',
