@@ -2,6 +2,7 @@
 use Mojolicious::Lite;
 use Store::CouchDB;
 use Data::Dumper;
+use Mojo::JSON;
 
 my $config = plugin Config => {
     file      => 'etc/githublicious.conf',
@@ -18,6 +19,7 @@ plugin 'CouchAuth', {
     port => $config->{couch_port},
     };
 plugin 'FormValidate';
+plugin 'Jenkins';
 #plugin 'Mail', $config->{mail};
 
 
@@ -133,7 +135,17 @@ any '/dashboard' => sub {
 
 } => 'dashboard';
 
+post '/add' => sub  {
+    my $self = shift;
 
+    my $json = Mojo::JSON->new();
+    my $doc = $json->decode($self->param('payload'));
+    $doc->{type} = 'commit';
+    $couch->put_doc({doc => $doc});
+    my $project = '';
+    $self->process_commit($project, $doc);
+    $self->render_json('ok');
+};
 
 
 app->start;
