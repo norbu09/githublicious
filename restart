@@ -1,0 +1,5 @@
+#!/bin/sh
+
+DIR=`echo $0 | sed 's/restart//'`
+cd ${DIR}
+hypnotoad githublicious
