@@ -1,0 +1,4 @@
+# gitolicious
+
+This is a github post commit hook endpoint for triggering Jenkins builds
+after git commits to github.
