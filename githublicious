@@ -125,8 +125,7 @@ post '/add' => sub {
     my $doc  = $json->decode( $self->param('payload') );
     $doc->{type} = 'commit';
     $couch->put_doc( { doc => $doc } );
-    my $project = '';
-    $self->process_commit( $project, $doc );
+    $self->process_commit( $couch, $doc );
     $self->render_json('ok');
 };
 
@@ -149,7 +148,7 @@ any '/dashboard' => sub {
         commits => $couch->get_array_view(
             {
                 view => 'commit/by_timestamp',
-                opts => { limit => 20 }
+                opts => { limit => 20, descending => 'true' }
             }
         )
     );
@@ -176,7 +175,7 @@ get '/new' => sub {
         push( @{ $self->stash->{missing} }, $repo )
           unless $config->{$repo};
     }
-    $self->stash( repos => $repos );
+    $self->stash( repos   => $repos );
     $self->stash( configs => $config );
 } => 'new';
 
