@@ -10,11 +10,12 @@ sub register {
     my $couch = Store::CouchDB->new(
         port  => $conf->{couch_port},
         db    => $conf->{couch_db},
+        debug => 1,
     );
 
     $app->helper(
         process_commit => sub {
-            my ( $doc ) = @_;
+            my ( $self, $doc ) = @_;
             my $config = $couch->get_view(
                 {
                     view => 'repository/config',
@@ -31,6 +32,7 @@ sub register {
             $doc->{deploy} = $ua->get($url)->res->body;
             $doc->{deploy_time} = time;
             $couch->put_doc({doc => $doc});
+            return;
         },
     );
 }
