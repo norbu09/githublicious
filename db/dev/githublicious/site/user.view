@@ -1,0 +1,15 @@
+[map]
+function(doc) {
+  if (
+    doc.type == 'user' &&
+    doc.active
+  ) {
+    emit(doc.username, 1);
+  }
+}
+
+[params]
+name = user
+language = javascript
+_id = _design/site
+_rev = 2-af5c4efaf5ffcf6a8a9e1610513556c2
