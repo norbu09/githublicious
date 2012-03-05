@@ -1,0 +1,26 @@
+% layout 'default';
+% title 'githublicious';
+
+<p>
+<% if($missing->[0]){ %>
+<h1>missing configs:</h1>
+<% foreach my $m (@{$missing}){ %>
+<%= form_for new => (method => 'post') => begin %>
+    <input type="hidden" name="formfields" value="jenkins,name">
+    <input type="hidden" name="name" value="<%= $m %>">
+    <h3>config for <%= $m %></h3>
+    <br>Jenkins URL: <%= text_field 'jenkins' %>
+    <br><%= submit_button %>
+<%= end %>
+<% } %>
+<% } %>
+</p>
+<p>
+<h1>active configs:</h1>
+<% foreach my $c (keys %{$configs}){ %>
+<h3><%= $c %></h3>
+    <pre>
+    <%= dumper $configs->{$c} %>
+    </pre>
+<% } %>
+</p>

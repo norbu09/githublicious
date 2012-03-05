@@ -1,4 +1,14 @@
 % layout 'default';
 % title 'githublicious';
 
-<h1>Dashboard</h1>
+<p>
+<h1>recent commits</h1>
+</p>
+<p>
+<% foreach my $c (@{$commits}){ %>
+
+    <span class="label label-info">commit</span> in <a href="<%= $c->{repository}->{url} %>"><%= $c->{repository}->{name} %></a>
+    <br><small><%= $c->{head_commit}->{author}->{name} %>: <a href="<%= $c->{head_commit}->{url}%>"><%= $c->{head_commit}->{message} %></a></small>
+
+<% } %>
+</p>
