@@ -1,0 +1,12 @@
+[map]
+function(doc) {
+  if (doc.type == 'config') {
+    emit(doc.name, null);
+  }
+}
+
+[params]
+name = config
+language = javascript
+_id = _design/repository
+_rev = 3-ba6f1295d8eb7d71b21fa63f46563085

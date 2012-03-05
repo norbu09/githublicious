@@ -1,0 +1,16 @@
+[map]
+function(doc) {
+  if (doc.type == 'commit') {
+    emit(doc.repository.name, null);
+  }
+}
+
+[reduce]
+function(keys, values) {
+   return 1;
+}
+[params]
+name = repository
+language = javascript
+_id = _design/commit
+_rev = 4-5d96ab2469ebf605f5b38c2beee5f733
