@@ -117,6 +117,18 @@ post '/reset_password/:id' => sub {
     $self->redirect_to('/login');
 };
 
+post '/add' => sub  {
+    my $self = shift;
+
+    my $json = Mojo::JSON->new();
+    my $doc = $json->decode($self->param('payload'));
+    $doc->{type} = 'commit';
+    $couch->put_doc({doc => $doc});
+    my $project = '';
+    $self->process_commit($project, $doc);
+    $self->render_json('ok');
+};
+
 ## private stuff below here
 under sub {
     my $self = shift;
@@ -134,18 +146,6 @@ any '/dashboard' => sub {
     my $self = shift;
 
 } => 'dashboard';
-
-post '/add' => sub  {
-    my $self = shift;
-
-    my $json = Mojo::JSON->new();
-    my $doc = $json->decode($self->param('payload'));
-    $doc->{type} = 'commit';
-    $couch->put_doc({doc => $doc});
-    my $project = '';
-    $self->process_commit($project, $doc);
-    $self->render_json('ok');
-};
 
 
 app->start;
