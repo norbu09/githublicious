@@ -26,8 +26,9 @@ sub register {
                 }
             );
             return unless $config->{ $doc->{repository}->{name} };
-            my $conf = $config->{ $doc->{repository}->{name} };
-            my $branch = pop( @{ split( /\//, $doc->{ref} ) } );
+            my $conf   = $config->{ $doc->{repository}->{name} };
+            my @parts  = split( /\//, $doc->{ref} );
+            my $branch = pop(@parts);
             return unless $conf->{branch} eq $branch;
             return unless $conf->{jenkins};
             my $ua = Mojo::UserAgent->new;
