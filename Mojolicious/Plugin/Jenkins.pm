@@ -26,12 +26,14 @@ sub register {
                 }
             );
             return unless $config->{ $doc->{repository}->{name} };
-            my $url = $config->{ $doc->{repository}->{name} }->{jenkins};
-            return unless $url;
+            my $conf = $config->{ $doc->{repository}->{name} };
+            my $branch = pop( @{ split( /\//, $doc->{ref} ) } );
+            return unless $conf->{branch} eq $branch;
+            return unless $conf->{jenkins};
             my $ua = Mojo::UserAgent->new;
-            $doc->{deploy} = $ua->get($url)->res->body;
+            $doc->{deploy}      = $ua->get( $conf->{jenkins} )->res->body;
             $doc->{deploy_time} = time;
-            $couch->put_doc({name => $doc->{_id}, doc => $doc});
+            $couch->put_doc( { name => $doc->{_id}, doc => $doc } );
             return;
         },
     );

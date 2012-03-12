@@ -120,10 +120,12 @@ post '/add' => sub {
     my $json = Mojo::JSON->new();
     my $doc  = $json->decode( $self->param('payload') );
     $doc->{type} = 'commit';
-    $couch->put_doc( { doc => $doc } );
+    my $id = $couch->put_doc( { doc => $doc } );
+    $doc->{_id} = $id;
     $self->process_commit( $doc );
     $self->render_json('ok');
 };
+
 
 ## private stuff below here
 under sub {
