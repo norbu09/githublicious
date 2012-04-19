@@ -17,8 +17,18 @@ my $couch = Store::CouchDB->new(
 plugin 'CouchAuth', $config;
 plugin 'FormValidate';
 plugin 'Jenkins', $config;
+plugin 'Jabber', $config->{jabber};
+
+app->start_jabber();
 
 #plugin 'Mail', $config->{mail};
+
+get '/send/:msg' => sub  {
+    my ($self) = @_;
+
+    $self->send_jabber($self->param('msg'), 'lenz@ideegeo.com');
+    $self->redirect_to('/');
+};
 
 get '/' => sub {
     my $self = shift;
