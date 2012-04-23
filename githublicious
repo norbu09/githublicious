@@ -16,19 +16,10 @@ my $couch = Store::CouchDB->new(
 
 plugin 'CouchAuth', $config;
 plugin 'FormValidate';
-plugin 'Jenkins', $config;
+plugin 'Process', $config;
 plugin 'Jabber', $config->{jabber};
-
-app->start_jabber();
-
 #plugin 'Mail', $config->{mail};
 
-get '/send/:msg' => sub  {
-    my ($self) = @_;
-
-    $self->send_jabber($self->param('msg'), 'lenz@ideegeo.com');
-    $self->redirect_to('/');
-};
 
 get '/' => sub {
     my $self = shift;
@@ -132,7 +123,10 @@ post '/add' => sub {
     $doc->{type} = 'commit';
     my $id = $couch->put_doc( { doc => $doc } );
     $doc->{_id} = $id;
+    $self->set_jabber_presence('processing commit');
     $self->process_commit( $doc );
+    #$self->deploy_commit( $doc );
+    $self->set_jabber_presence('boring ...');
     $self->render_json('ok');
 };
 
@@ -196,4 +190,5 @@ post '/new' => sub {
     $self->redirect_to('/new');
 };
 
+app->start_jabber();
 app->start;

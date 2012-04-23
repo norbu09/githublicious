@@ -1,4 +1,4 @@
-package Mojolicious::Plugin::Jenkins;
+package Mojolicious::Plugin::Process;
 use Mojo::Base 'Mojolicious::Plugin';
 use Mojo::UserAgent;
 use Store::CouchDB;
@@ -30,13 +30,38 @@ sub register {
             my @parts  = split( /\//, $doc->{ref} );
             my $branch = pop(@parts);
             return unless $conf->{branch} eq $branch;
-            return unless $conf->{jenkins};
-            my $ua = Mojo::UserAgent->new;
-            $doc->{deploy}      = $ua->get( $conf->{jenkins} )->res->body;
+
+            my $to = $conf->{jabber_notify}
+              || $conf->{jabber}->{chatroom};
+            my $msg =
+                'Processing commit in '
+              . $doc->{repository}->{name} . ': "'
+              . $doc->{head_commit}->{message}
+              . '" from '
+              . $doc->{head_commit}->{author}->{name};
+            $self->send_jabber( $msg, $to );
+
+            given ( $config->{type} ) {
+                when ('Jenkins') { $doc->{deploy} = $self->jenkins($config); }
+                when ('TAP') { $self->tap( $config, $doc ); }
+                default {
+                    $app->log->warn( "No build type defined for your commit ["
+                          . $doc->{_id}
+                          . "]" );
+                }
+            }
             $doc->{deploy_time} = time;
             $couch->put_doc( { name => $doc->{_id}, doc => $doc } );
             return;
         },
+    );
+    $app->helper(
+        jenkins => sub {
+            my ( $self, $config ) = @_;
+            return unless $config->{jenkins};
+            my $ua = Mojo::UserAgent->new;
+            return $ua->get( $config->{jenkins} )->res->body;
+        }
     );
 }
 
