@@ -41,7 +41,7 @@ sub register {
               . $doc->{head_commit}->{author}->{name};
             $self->send_jabber( $msg, $to );
 
-            given ( $config->{type} ) {
+            given ( $config->{test} ) {
                 when ('Jenkins') { $doc->{deploy} = $self->jenkins($config); }
                 when ('TAP') { $self->tap( $config, $doc ); }
                 default {
