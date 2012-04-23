@@ -26,12 +26,12 @@ sub register {
                 }
             );
             return unless $config->{ $doc->{repository}->{name} };
-            my $conf   = $config->{ $doc->{repository}->{name} };
-            my @parts  = split( /\//, $doc->{ref} );
-            my $branch = pop(@parts);
-            return unless $conf->{branch} eq $branch;
+            my $repo_conf = $config->{ $doc->{repository}->{name} };
+            my @parts     = split( /\//, $doc->{ref} );
+            my $branch    = pop(@parts);
+            return unless $repo_conf->{branch} eq $branch;
 
-            my $to = $conf->{jabber_notify}
+            my $to = $repo_conf->{jabber_notify}
               || $conf->{jabber}->{chatroom};
             my $msg =
                 'Processing commit in '
@@ -41,9 +41,11 @@ sub register {
               . $doc->{head_commit}->{author}->{name};
             $self->send_jabber( $msg, $to );
 
-            given ( $config->{test} ) {
-                when ('Jenkins') { $doc->{deploy} = $self->jenkins($config); }
-                when ('TAP') { $self->tap( $config, $doc ); }
+            given ( $repo_conf->{test} ) {
+                when ('Jenkins') {
+                    $doc->{deploy} = $self->jenkins($repo_conf);
+                }
+                when ('TAP') { $self->tap( $repo_conf, $doc ); }
                 default {
                     $app->log->warn( "No build type defined for your commit ["
                           . $doc->{_id}
