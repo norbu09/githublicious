@@ -8,8 +8,8 @@ sub register {
 
     # default values
     my $couch = Store::CouchDB->new(
-        port  => $conf->{couch_port},
-        db    => $conf->{couch_db},
+        port  => $conf->{couch}->{port},
+        db    => $conf->{couch}->{db},
         debug => 1,
     );
 
