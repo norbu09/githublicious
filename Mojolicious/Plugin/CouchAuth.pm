@@ -8,8 +8,8 @@ sub register {
     my ( $self, $app, $params ) = @_;
 
     my $couch = Store::CouchDB->new(
-        port => $params->{couch_port},
-        db   => $params->{couch_db},
+        port => $params->{port},
+        db   => $params->{db},
     );
     my $password_reset_timeout = 172800; # two days
 

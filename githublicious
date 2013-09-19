@@ -9,12 +9,11 @@ my $config = plugin Config => {
     stash_key => 'conf'
 };
 my $couch = Store::CouchDB->new(
-    port  => $config->{couch_port},
-    db    => $config->{couch_db},
-    debug => 1,
+    port  => $config->{couch}->{port},
+    db    => $config->{couch}->{db},
 );
 
-plugin 'CouchAuth', $config;
+plugin 'CouchAuth', $config->{couch};
 plugin 'FormValidate';
 plugin 'Process', $config;
 plugin 'Jabber', $config->{jabber};
